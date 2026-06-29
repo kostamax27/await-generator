@@ -110,7 +110,7 @@ final class Traverser{
 	 *
 	 * @return Generator<mixed, Await::RESOLVE|null|Await::RESOLVE_MULTI|Await::REJECT|Await::ONCE|Await::ALL|Await::RACE|Generator, mixed, ?Throwable>
 	 */
-	public function interrupt(Throwable $ex = null, int $attempts = self::MAX_INTERRUPTS) : Generator{
+	public function interrupt(?Throwable $ex = null, int $attempts = self::MAX_INTERRUPTS) : Generator{
 		$ex = $ex ?? InterruptException::get();
 		for($i = 0; $i < $attempts; $i++){
 			try{
