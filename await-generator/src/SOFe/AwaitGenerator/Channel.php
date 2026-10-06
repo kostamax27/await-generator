@@ -24,6 +24,7 @@ namespace SOFe\AwaitGenerator;
 
 use function array_shift;
 use function count;
+use function spl_object_hash;
 use Generator;
 
 /**
@@ -64,14 +65,14 @@ final class Channel{
 
 			yield from Await::promise(function($resolve) use($value, &$key){
 				$key = $resolve;
-				$this->state->queue[spl_object_id($key)] = [$value, $resolve];
+				$this->state->queue[spl_object_hash($key)] = [$value, $resolve];
 			});
 		} finally {
 			if($key !== null) {
 				if($this->state instanceof SendingChannelState) {
 					// our key may still exist in the channel state
 
-					unset($this->state->queue[spl_object_id($key)]);
+					unset($this->state->queue[spl_object_hash($key)]);
 					if(count($this->state->queue) === 0) {
 						$this->state = new EmptyChannelState;
 					}
@@ -139,14 +140,14 @@ final class Channel{
 
 			return yield from Await::promise(function($resolve) use(&$key){
 				$key = $resolve;
-				$this->state->queue[spl_object_id($key)] = $resolve;
+				$this->state->queue[spl_object_hash($key)] = $resolve;
 			});
 		} finally {
 			if($key !== null) {
 				if($this->state instanceof ReceivingChannelState) {
 					// our key may still exist in the channel state
 
-					unset($this->state->queue[spl_object_id($key)]);
+					unset($this->state->queue[spl_object_hash($key)]);
 					if(count($this->state->queue) === 0) {
 						$this->state = new EmptyChannelState;
 					}
