@@ -289,7 +289,7 @@ class Await extends PromiseState{
 				$ch->tryReceiveOr(null);
 			}
 			foreach($generators as $key => $generator) {
-				if($which !== null && $key !== $which) {
+				if(($which !== null || $firstException !== null) && $key !== $which) {
 					try {
 						$generator->throw(new RaceLostException);
 					} catch(RaceLostException $e) {
